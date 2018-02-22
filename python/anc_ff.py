@@ -24,7 +24,7 @@ from gnuradio import gr
 
 class anc_ff(gr.sync_block):
     """
-    docstring for block anc_ff
+    This block clean-up a signal via minimizing LSE with a reference signal. Two outputs available: signal canceled (a tone for example) and the cleaned signal (error).
     """
     def __init__(self, forgetting_factor, size):
         gr.sync_block.__init__(self,
