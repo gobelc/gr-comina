@@ -31,71 +31,40 @@ class anc_ff(gr.sync_block):
             name="anc_ff",
             in_sig=[np.float32,np.float32],
             out_sig=[np.float32,np.float32])
-        
         self.size = size
         self.forgetting_factor = forgetting_factor
-        self.flag = True
         self.sigma_0 = 1
         self.h =(np.ones(self.size)).T
         self.theta = (np.zeros(size)).T
         self.sigma = self.sigma_0*np.identity(size)
-        #self.error=0
-        #self.salida=0
         self.counter=0
 
     def work(self, input_items, output_items):
-        in0 = input_items[0]
-        in1 = input_items[1]
-        
         out0= output_items[0]
         out1= output_items[1]
-        
         
         signal = input_items[0][:]
         ref = input_items[1][:]
 
         salida = np.zeros(len(out0))
         error = np.ones(len(out1))
-
         forgetting_factor = self.forgetting_factor
 
-        print signal
-        print ref
-
         for n in range(0, len(out0)-1): 
+
             error[n] = signal[n] - np.matmul(self.h, self.theta)
-            self.K = (np.matmul(self.sigma,self.h))/(forgetting_factor**n+np.matmul(np.matmul(self.h,self.sigma),(self.h).T))
+            salida[n] = np.matmul(self.h, self.theta)
+
+            self.K = (np.matmul(self.sigma,self.h)) / (forgetting_factor**n+np.matmul(np.matmul(self.h,self.sigma),(self.h).T))
             self.h = np.roll(self.h,1)
             self.h[0] = ref[n]
             self.sigma = np.matmul(np.identity(self.size)-np.matmul(self.K,(self.h).T),self.sigma)
             self.forgetting_factor=self.forgetting_factor*self.forgetting_factor
-            
             self.theta = self.theta + self.K*error[n]
             
-            salida[n] = signal[n] - error[n]
+            #salida[n] = signal[n] - error[n]
             
             self.counter = self.counter + 1
-
-            print "error: ", error[n]
-            print "K: ", self.K
-            print "sigma: ", self.sigma
-            print "forgetting factor: ", self.forgetting_factor
-            print "ref: ", self.h
-            print "Filtro: ", self.theta
-            print self.counter
-        
-
-        ''' THIS WORKS
-        out0[:] = in0
-        out1[:] = in1
-        '''
-        #self.salida = salida[len(input_items)-1]
-        #self.error = error[len(input_items)-1]
-
-
-        print "n_output=", len(output_items[0])
-        print "salida items = ", len(salida)
-
 
         out0[:] = salida
         out1[:] = error
