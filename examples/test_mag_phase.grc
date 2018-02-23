@@ -364,7 +364,7 @@
     <key>analog_sig_source_x</key>
     <param>
       <key>amp</key>
-      <value>1</value>
+      <value>10</value>
     </param>
     <param>
       <key>alias</key>
@@ -384,7 +384,7 @@
     </param>
     <param>
       <key>freq</key>
-      <value>60</value>
+      <value>600</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -486,7 +486,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(376, 193)</value>
+      <value>(512, 193)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -521,7 +521,7 @@
     </param>
     <param>
       <key>const</key>
-      <value>0.1*cmath.exp(1j*0)</value>
+      <value>0.1</value>
     </param>
     <param>
       <key>affinity</key>
@@ -584,7 +584,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(96, 188)</value>
+      <value>(224, 188)</value>
     </param>
     <param>
       <key>_rotation</key>

@@ -486,7 +486,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(376, 193)</value>
+      <value>(400, 193)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -572,7 +572,7 @@
     </param>
     <param>
       <key>const</key>
-      <value>cmath.exp(1j*theta)</value>
+      <value>cmath.exp(1j*0)</value>
     </param>
     <param>
       <key>affinity</key>
@@ -584,7 +584,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(96, 188)</value>
+      <value>(208, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
