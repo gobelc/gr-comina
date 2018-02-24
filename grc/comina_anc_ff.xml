@@ -4,7 +4,7 @@
   <key>comina_anc_ff</key>
   <category>[comina]</category>
   <import>import comina</import>
-  <make>comina.anc_ff($forgetting_factor, $size)</make>
+  <make>comina.anc_ff($forgetting_factor, $size, $refresh_number)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -15,12 +15,16 @@
     <key>forgetting_factor</key>
     <type>float</type>
   </param>
-    <param>
+  <param>
     <name>Coefficients number</name>
     <key>size</key>
     <type>int</type>
   </param>
-
+  <param>
+    <name>Refresh rate</name>
+    <key>refresh_number</key>
+    <type>int</type>
+  </param>
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
        * type

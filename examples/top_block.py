@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Fri Feb 23 16:52:00 2018
+# Generated: Sat Feb 24 15:03:25 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -31,6 +31,7 @@ import comina
 import math
 import sip
 import sys
+from gnuradio import qtgui
 
 
 class top_block(gr.top_block, Qt.QWidget):
@@ -39,6 +40,7 @@ class top_block(gr.top_block, Qt.QWidget):
         gr.top_block.__init__(self, "Top Block")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("Top Block")
+        qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
@@ -61,48 +63,53 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.theta = theta = math.pi/4
+        self.sig_amp = sig_amp = 1
         self.samp_rate = samp_rate = 24e3
+        self.ref_amp = ref_amp = .1
 
         ##################################################
         # Blocks
         ##################################################
-        self._theta_range = Range(0, 2*math.pi, .01, math.pi/4, 200)
-        self._theta_win = RangeWidget(self._theta_range, self.set_theta, "Desfasaje Referencia", "counter_slider", float)
-        self.top_layout.addWidget(self._theta_win)
+        self._sig_amp_range = Range(0.1, 10, .1, 1, 200)
+        self._sig_amp_win = RangeWidget(self._sig_amp_range, self.set_sig_amp, "sig_amp", "counter_slider", float)
+        self.top_layout.addWidget(self._sig_amp_win)
+        self._ref_amp_range = Range(0.1, 10, .1, .1, 200)
+        self._ref_amp_win = RangeWidget(self._ref_amp_range, self.set_ref_amp, "ref_amp", "counter_slider", float)
+        self.top_layout.addWidget(self._ref_amp_win)
         self.qtgui_time_sink_x_2_0 = qtgui.time_sink_f(
         	1024, #size
         	samp_rate, #samp_rate
         	"Estimacion de tono", #name
         	3 #number of inputs
         )
-        self.qtgui_time_sink_x_2_0.set_update_time(0.10)
+        self.qtgui_time_sink_x_2_0.set_update_time(.01)
         self.qtgui_time_sink_x_2_0.set_y_axis(-1, 1)
-        
-        self.qtgui_time_sink_x_2_0.set_y_label("Amplitude", "")
-        
+
+        self.qtgui_time_sink_x_2_0.set_y_label('Amplitude', "")
+
         self.qtgui_time_sink_x_2_0.enable_tags(-1, True)
-        self.qtgui_time_sink_x_2_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, .5, 0, 0, "")
+        self.qtgui_time_sink_x_2_0.set_trigger_mode(qtgui.TRIG_MODE_NORM, qtgui.TRIG_SLOPE_POS, .5, 0, 0, "")
         self.qtgui_time_sink_x_2_0.enable_autoscale(False)
         self.qtgui_time_sink_x_2_0.enable_grid(False)
+        self.qtgui_time_sink_x_2_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_2_0.enable_control_panel(False)
-        
+
         if not True:
           self.qtgui_time_sink_x_2_0.disable_legend()
-        
-        labels = ["Tono original", "Tono estimado", "Señal de referencia", "", "",
-                  "", "", "", "", ""]
-        widths = [1, 2, 1, 1, 1,
+
+        labels = ['Tono original', 'Tono estimado', 'Referencia', '', '',
+                  '', '', '', '', '']
+        widths = [2, 2, 1, 1, 1,
                   1, 1, 1, 1, 1]
         colors = ["red", "blue", "green", "black", "cyan",
                   "magenta", "yellow", "dark red", "dark green", "blue"]
-        styles = [1, 1, 1, 1, 1,
+        styles = [1, 2, 1, 1, 1,
                   1, 1, 1, 1, 1]
         markers = [-1, -1, -1, -1, -1,
                    -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
-        
+
         for i in xrange(3):
             if len(labels[i]) == 0:
                 self.qtgui_time_sink_x_2_0.set_line_label(i, "Data {0}".format(i))
@@ -113,51 +120,63 @@ class top_block(gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_2_0.set_line_style(i, styles[i])
             self.qtgui_time_sink_x_2_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_2_0.set_line_alpha(i, alphas[i])
-        
+
         self._qtgui_time_sink_x_2_0_win = sip.wrapinstance(self.qtgui_time_sink_x_2_0.pyqwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_2_0_win)
-        self.comina_anc_ff_0 = comina.anc_ff(.95, 2)
-        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_float*1)
-        self.blocks_multiply_const_vxx_0_0 = blocks.multiply_const_vcc((cmath.exp(1j*theta), ))
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.1, ))
+        self.comina_anc_ff_0 = comina.anc_ff(.8, 2, 100)
+        self.blocks_wavfile_sink_0_0 = blocks.wavfile_sink('/home/olaznog/workspace/gr-comina/examples/audio/mag_phase/senal_interferencia.wav', 1, 24000, 8)
+        self.blocks_wavfile_sink_0 = blocks.wavfile_sink('/home/olaznog/workspace/gr-comina/examples/audio/mag_phase/ruido_cancelado.wav', 1, 24000, 8)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((ref_amp*cmath.exp(1j*math.pi/4), ))
         self.blocks_complex_to_real_0_0 = blocks.complex_to_real(1)
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
-        self.analog_sig_source_x_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 600, 10, 0)
+        self.analog_sig_source_x_1_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 200, sig_amp, 0)
+        self.analog_sig_source_x_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 200, sig_amp, 0)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_sig_source_x_1, 0), (self.blocks_multiply_const_vxx_0, 0))    
-        self.connect((self.analog_sig_source_x_1, 0), (self.blocks_multiply_const_vxx_0_0, 0))    
-        self.connect((self.blocks_complex_to_real_0, 0), (self.comina_anc_ff_0, 1))    
-        self.connect((self.blocks_complex_to_real_0, 0), (self.qtgui_time_sink_x_2_0, 2))    
-        self.connect((self.blocks_complex_to_real_0_0, 0), (self.comina_anc_ff_0, 0))    
-        self.connect((self.blocks_complex_to_real_0_0, 0), (self.qtgui_time_sink_x_2_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_complex_to_real_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.blocks_complex_to_real_0_0, 0))    
-        self.connect((self.comina_anc_ff_0, 1), (self.blocks_null_sink_0, 0))    
-        self.connect((self.comina_anc_ff_0, 0), (self.qtgui_time_sink_x_2_0, 1))    
+        self.connect((self.analog_sig_source_x_1, 0), (self.blocks_complex_to_real_0_0, 0))
+        self.connect((self.analog_sig_source_x_1_0, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.blocks_complex_to_real_0, 0), (self.comina_anc_ff_0, 1))
+        self.connect((self.blocks_complex_to_real_0, 0), (self.qtgui_time_sink_x_2_0, 2))
+        self.connect((self.blocks_complex_to_real_0_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_complex_to_real_0_0, 0), (self.comina_anc_ff_0, 0))
+        self.connect((self.blocks_complex_to_real_0_0, 0), (self.qtgui_time_sink_x_2_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_complex_to_real_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.blocks_wavfile_sink_0_0, 0))
+        self.connect((self.comina_anc_ff_0, 1), (self.blocks_wavfile_sink_0, 0))
+        self.connect((self.comina_anc_ff_0, 0), (self.qtgui_time_sink_x_2_0, 1))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
+    def get_sig_amp(self):
+        return self.sig_amp
 
-    def get_theta(self):
-        return self.theta
-
-    def set_theta(self, theta):
-        self.theta = theta
-        self.blocks_multiply_const_vxx_0_0.set_k((cmath.exp(1j*self.theta), ))
+    def set_sig_amp(self, sig_amp):
+        self.sig_amp = sig_amp
+        self.analog_sig_source_x_1_0.set_amplitude(self.sig_amp)
+        self.analog_sig_source_x_1.set_amplitude(self.sig_amp)
 
     def get_samp_rate(self):
         return self.samp_rate
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_sig_source_x_1.set_sampling_freq(self.samp_rate)
         self.qtgui_time_sink_x_2_0.set_samp_rate(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.analog_sig_source_x_1_0.set_sampling_freq(self.samp_rate)
+        self.analog_sig_source_x_1.set_sampling_freq(self.samp_rate)
+
+    def get_ref_amp(self):
+        return self.ref_amp
+
+    def set_ref_amp(self, ref_amp):
+        self.ref_amp = ref_amp
+        self.blocks_multiply_const_vxx_0.set_k((self.ref_amp*cmath.exp(1j*math.pi/4), ))
 
 
 def main(top_block_cls=top_block, options=None):
