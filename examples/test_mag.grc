@@ -865,6 +865,10 @@
       <key>minoutbuf</key>
       <value>0</value>
     </param>
+    <param>
+      <key>refresh_number</key>
+      <value>10000</value>
+    </param>
   </block>
   <block>
     <key>import</key>
