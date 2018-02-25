@@ -9,11 +9,17 @@ Installation procedure:
 2. Enter gr-comina and write these commands:
 
 mkdir build
+
 cd build
+
 cmake ../
+
 make
+
 make test
+
 sudo make install
+
 sudo ldconfig
 
-There are some example files in examples folder, the PATH towards the wav files must be update in order to work.
+There are some example files in examples folder, the PATH towards the wav files must be updated in order to work.
