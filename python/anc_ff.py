@@ -40,8 +40,7 @@ class anc_ff(gr.sync_block):
         self.h = (np.ones(self.size)).T
         self.theta = (np.zeros(size)).T
         self.sigma = self.sigma_0*np.identity(size)
-        self.K = (np.matmul(self.sigma,self.h)) / 
-            (self.forgetting_factor+np.matmul(np.matmul(self.h.T,self.sigma),self.h))
+        self.K = (np.matmul(self.sigma,self.h)) / (self.forgetting_factor+np.matmul(np.matmul(self.h.T,self.sigma),self.h))
         self.count = 0
 
     def work(self, input_items, output_items):
