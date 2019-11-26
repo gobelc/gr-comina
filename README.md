@@ -4,10 +4,6 @@ Adaptive Noise Canceler is a GnuRadio module implemented in Python for the final
 
 Installation procedure:
 
-1. Download git files, rename anc folder to gr-comina.
-
-2. Enter gr-comina and write these commands:
-
 mkdir build
 
 cd build
